@@ -37,3 +37,13 @@ next-env.d.ts
 
 # claude
 .claude
+
+# CMS (Strapi)
+strapi/
+postgres-data/
+.env
+
+# Uploads
+uploads/
+
+blog/
