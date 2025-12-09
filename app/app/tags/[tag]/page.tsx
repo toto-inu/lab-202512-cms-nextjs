@@ -1,18 +1,29 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getCasesByTag, getAllTags } from '@/data/cases';
+import { getCasesByTag, getAllTags } from '@/lib/strapi';
 
 export async function generateStaticParams() {
-  const tags = getAllTags();
-  return tags.map((tag) => ({
-    tag: encodeURIComponent(tag),
-  }));
+  try {
+    const tags = await getAllTags();
+    return tags.map((tag) => ({
+      tag: encodeURIComponent(tag),
+    }));
+  } catch (error) {
+    console.error('Failed to generate static params for tags:', error);
+    return [];
+  }
 }
 
 export default async function TagPage({ params }: { params: Promise<{ tag: string }> }) {
   const { tag: encodedTag } = await params;
   const tag = decodeURIComponent(encodedTag);
-  const cases = getCasesByTag(tag);
+
+  let cases = [];
+  try {
+    cases = await getCasesByTag(tag);
+  } catch (error) {
+    console.error('Failed to fetch cases by tag:', error);
+  }
 
   if (cases.length === 0) {
     notFound();

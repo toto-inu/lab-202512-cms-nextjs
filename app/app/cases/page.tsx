@@ -1,8 +1,16 @@
 import Link from 'next/link';
-import { getAllCases } from '@/data/cases';
+import { getAllCases } from '@/lib/strapi';
 
-export default function Cases() {
-  const cases = getAllCases();
+export default async function Cases() {
+  let cases = [];
+  let error = null;
+
+  try {
+    cases = await getAllCases();
+  } catch (err) {
+    console.error('Failed to fetch cases from Strapi:', err);
+    error = err;
+  }
 
   return (
     <div>
@@ -21,8 +29,34 @@ export default function Cases() {
       {/* Cases List */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {cases.map((caseItem) => (
+          {error && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-8">
+              <h3 className="text-lg font-semibold text-yellow-800 mb-2">
+                CMSとの接続に問題があります
+              </h3>
+              <p className="text-yellow-700 mb-4">
+                Strapi CMSからデータを取得できませんでした。Strapiが起動しているか確認してください。
+              </p>
+              <code className="text-sm bg-yellow-100 px-2 py-1 rounded">
+                docker compose up -d
+              </code>
+            </div>
+          )}
+
+          {!error && cases.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg mb-4">
+                まだケーススタディが登録されていません
+              </p>
+              <p className="text-gray-400">
+                Strapi管理画面から記事を追加してください
+              </p>
+            </div>
+          )}
+
+          {cases.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {cases.map((caseItem) => (
               <Link
                 key={caseItem.id}
                 href={`/cases/${caseItem.id}`}
@@ -59,8 +93,9 @@ export default function Cases() {
                   </div>
                 </div>
               </Link>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>

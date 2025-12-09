@@ -1,8 +1,14 @@
 import Link from 'next/link';
-import { getTagWithCount } from '@/data/cases';
+import { getTagWithCount } from '@/lib/strapi';
 
-export default function TagsPage() {
-  const tags = getTagWithCount();
+export default async function TagsPage() {
+  let tags = [];
+
+  try {
+    tags = await getTagWithCount();
+  } catch (error) {
+    console.error('Failed to fetch tags from Strapi:', error);
+  }
 
   return (
     <div>
@@ -21,8 +27,20 @@ export default function TagsPage() {
       {/* Tags Grid */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {tags.map(({ tag, count }) => (
+          {tags.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg mb-4">
+                まだタグが登録されていません
+              </p>
+              <p className="text-gray-400">
+                Strapi管理画面から記事を追加してください
+              </p>
+            </div>
+          )}
+
+          {tags.length > 0 && (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {tags.map(({ tag, count }) => (
               <Link
                 key={tag}
                 href={`/tags/${encodeURIComponent(tag)}`}
@@ -38,8 +56,9 @@ export default function TagsPage() {
                   {count}件の事例
                 </div>
               </Link>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>

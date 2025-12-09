@@ -2,24 +2,36 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { getCaseById, getAllCases, getRelatedCases } from '@/data/cases';
+import { getCaseById, getAllCases, getRelatedCases } from '@/lib/strapi';
 
 export async function generateStaticParams() {
-  const cases = getAllCases();
-  return cases.map((caseItem) => ({
-    id: caseItem.id,
-  }));
+  try {
+    const cases = await getAllCases();
+    return cases.map((caseItem) => ({
+      id: caseItem.id,
+    }));
+  } catch (error) {
+    console.error('Failed to generate static params:', error);
+    return [];
+  }
 }
 
 export default async function CaseDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const caseItem = getCaseById(id);
 
-  if (!caseItem) {
+  let caseItem;
+  let relatedCases = [];
+
+  try {
+    caseItem = await getCaseById(id);
+    if (!caseItem) {
+      notFound();
+    }
+    relatedCases = await getRelatedCases(id, 2);
+  } catch (error) {
+    console.error('Failed to fetch case data:', error);
     notFound();
   }
-
-  const relatedCases = getRelatedCases(id, 2);
 
   return (
     <div>

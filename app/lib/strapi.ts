@@ -8,11 +8,12 @@ const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
 const API_TOKEN = process.env.STRAPI_API_TOKEN;
 
 /**
- * Strapiのレスポンス型定義
+ * Strapiのレスポンス型定義（Strapi v5対応）
  */
 interface StrapiResponseData<T> {
   id: number;
-  attributes: T;
+  documentId: string;
+  [key: string]: any;
 }
 
 interface StrapiResponse<T> {
@@ -52,9 +53,11 @@ interface StrapiMedia {
 }
 
 /**
- * CaseコンテンツタイプのStrapi attributes型
+ * CaseコンテンツタイプのStrapi型（Strapi v5対応 - フラット構造）
  */
-interface CaseAttributes {
+interface StrapiCase {
+  id: number;
+  documentId: string;
   title: string;
   description: string;
   client: string;
@@ -64,9 +67,7 @@ interface CaseAttributes {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
-  thumbnail: {
-    data: StrapiMedia | null;
-  };
+  thumbnail: StrapiMedia | null;
 }
 
 /**
@@ -85,22 +86,21 @@ export interface Case {
 }
 
 /**
- * StrapiのCase responseをアプリケーション用のCase型に変換
+ * StrapiのCase responseをアプリケーション用のCase型に変換（Strapi v5対応）
  */
-function transformCase(strapiCase: StrapiResponseData<CaseAttributes>): Case {
-  const { id, attributes } = strapiCase;
-  const thumbnailUrl = attributes.thumbnail?.data?.attributes?.url || '';
+function transformCase(strapiCase: StrapiCase): Case {
+  const thumbnailUrl = strapiCase.thumbnail?.attributes?.url || '';
 
   return {
-    id: String(id),
-    title: attributes.title,
-    description: attributes.description,
-    client: attributes.client,
-    category: attributes.category,
-    tags: attributes.tags,
-    publishedAt: attributes.publishedAt || attributes.createdAt,
+    id: strapiCase.documentId,
+    title: strapiCase.title,
+    description: strapiCase.description,
+    client: strapiCase.client,
+    category: strapiCase.category,
+    tags: strapiCase.tags,
+    publishedAt: strapiCase.publishedAt || strapiCase.createdAt,
     thumbnail: thumbnailUrl.startsWith('http') ? thumbnailUrl : `${STRAPI_URL}${thumbnailUrl}`,
-    content: attributes.content,
+    content: strapiCase.content,
   };
 }
 
@@ -149,7 +149,7 @@ async function fetchAPI<T>(
  */
 export async function getAllCases(): Promise<Case[]> {
   try {
-    const response = await fetchAPI<StrapiResponse<CaseAttributes[]>>(
+    const response = await fetchAPI<{ data: StrapiCase[] }>(
       '/cases?populate=thumbnail&sort=publishedAt:desc'
     );
 
@@ -170,7 +170,7 @@ export async function getAllCases(): Promise<Case[]> {
  */
 export async function getCaseById(id: string): Promise<Case | undefined> {
   try {
-    const response = await fetchAPI<StrapiResponse<CaseAttributes>>(
+    const response = await fetchAPI<{ data: StrapiCase }>(
       `/cases/${id}?populate=thumbnail`
     );
 
@@ -178,7 +178,7 @@ export async function getCaseById(id: string): Promise<Case | undefined> {
       return undefined;
     }
 
-    return transformCase(response.data as StrapiResponseData<CaseAttributes>);
+    return transformCase(response.data);
   } catch (error) {
     console.error(`Failed to fetch case ${id}:`, error);
     return undefined;
@@ -191,7 +191,7 @@ export async function getCaseById(id: string): Promise<Case | undefined> {
 export async function getCasesByTag(tag: string): Promise<Case[]> {
   try {
     // Strapiのフィルター構文: filters[tags][$contains]=tag
-    const response = await fetchAPI<StrapiResponse<CaseAttributes[]>>(
+    const response = await fetchAPI<{ data: StrapiCase[] }>(
       `/cases?populate=thumbnail&filters[tags][$contains]=${encodeURIComponent(tag)}&sort=publishedAt:desc`
     );
 
