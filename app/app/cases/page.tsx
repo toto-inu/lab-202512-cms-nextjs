@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { getAllCases } from '@/data/cases';
+import { getAllCases } from '@/lib/api/cases';
 
-export default function Cases() {
-  const cases = getAllCases();
+export default async function Cases() {
+  const cases = await getAllCases();
 
   return (
     <div>
@@ -42,12 +42,12 @@ export default function Cases() {
                     {caseItem.description}
                   </p>
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {caseItem.tags.slice(0, 3).map((tag) => (
+                    {caseItem.tags && caseItem.tags.split(',').slice(0, 3).map((tag) => (
                       <span
-                        key={tag}
+                        key={tag.trim()}
                         className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
                       >
-                        {tag}
+                        {tag.trim()}
                       </span>
                     ))}
                   </div>

@@ -1,4 +1,24 @@
-export default function About() {
+import { getCompanyInfo } from '@/lib/api/company';
+
+export default async function About() {
+  // 会社情報を取得（エラー時はデフォルト値を使用）
+  let company;
+  try {
+    company = await getCompanyInfo();
+  } catch (error) {
+    // microCMSにデータがまだない場合のデフォルト値
+    company = {
+      name: '株式会社StellarCreate',
+      description: 'テクノロジーで人とサービスの可能性を引き上げることをミッションとした、フロントエンド開発とAIソリューションに特化したプロフェッショナル集団です。',
+      vision: '技術パートナーとして、お客様と共に成長し続ける。単なる開発会社ではなく、お客様のビジネスパートナーとして、長期的な成功に貢献します。',
+      mission: 'テクノロジーで、人とサービスの可能性を引き上げる。私たちは最新のフロントエンド技術とAIを駆使し、お客様のビジネスを次のステージへと導きます。',
+      established: '2020年4月',
+      address: '〒150-0001 東京都渋谷区神宮前1-1-1',
+      representative: '代表取締役 山田 太郎',
+      capital: '1,000万円',
+    };
+  }
+
   return (
     <div>
       {/* Hero Section */}
@@ -8,8 +28,7 @@ export default function About() {
             会社概要
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl">
-            株式会社StellarCreateは、テクノロジーで人とサービスの可能性を引き上げることをミッションとした、
-            フロントエンド開発とAIソリューションに特化したプロフェッショナル集団です。
+            {company.description}
           </p>
         </div>
       </section>
@@ -23,81 +42,82 @@ export default function About() {
             </h2>
 
             <div className="space-y-8">
-              <div className="border-b border-gray-200 pb-6">
-                <dt className="text-sm font-semibold text-gray-600 mb-2">会社名</dt>
-                <dd className="text-lg text-gray-900">株式会社StellarCreate</dd>
-              </div>
+              {company.name && (
+                <div className="border-b border-gray-200 pb-6">
+                  <dt className="text-sm font-semibold text-gray-600 mb-2">会社名</dt>
+                  <dd className="text-lg text-gray-900">{company.name}</dd>
+                </div>
+              )}
 
-              <div className="border-b border-gray-200 pb-6">
-                <dt className="text-sm font-semibold text-gray-600 mb-2">代表者</dt>
-                <dd className="text-lg text-gray-900">代表取締役 山田 太郎</dd>
-              </div>
+              {company.representative && (
+                <div className="border-b border-gray-200 pb-6">
+                  <dt className="text-sm font-semibold text-gray-600 mb-2">代表者</dt>
+                  <dd className="text-lg text-gray-900">{company.representative}</dd>
+                </div>
+              )}
 
-              <div className="border-b border-gray-200 pb-6">
-                <dt className="text-sm font-semibold text-gray-600 mb-2">設立</dt>
-                <dd className="text-lg text-gray-900">2020年4月</dd>
-              </div>
+              {company.established && (
+                <div className="border-b border-gray-200 pb-6">
+                  <dt className="text-sm font-semibold text-gray-600 mb-2">設立</dt>
+                  <dd className="text-lg text-gray-900">{company.established}</dd>
+                </div>
+              )}
 
-              <div className="border-b border-gray-200 pb-6">
-                <dt className="text-sm font-semibold text-gray-600 mb-2">資本金</dt>
-                <dd className="text-lg text-gray-900">1,000万円</dd>
-              </div>
+              {company.capital && (
+                <div className="border-b border-gray-200 pb-6">
+                  <dt className="text-sm font-semibold text-gray-600 mb-2">資本金</dt>
+                  <dd className="text-lg text-gray-900">{company.capital}</dd>
+                </div>
+              )}
 
-              <div className="border-b border-gray-200 pb-6">
-                <dt className="text-sm font-semibold text-gray-600 mb-2">所在地</dt>
-                <dd className="text-lg text-gray-900">
-                  〒150-0001
-                  <br />
-                  東京都渋谷区神宮前1-1-1
-                </dd>
-              </div>
+              {company.address && (
+                <div className="border-b border-gray-200 pb-6">
+                  <dt className="text-sm font-semibold text-gray-600 mb-2">所在地</dt>
+                  <dd className="text-lg text-gray-900 whitespace-pre-line">{company.address}</dd>
+                </div>
+              )}
 
-              <div className="border-b border-gray-200 pb-6">
-                <dt className="text-sm font-semibold text-gray-600 mb-2">事業内容</dt>
-                <dd className="text-lg text-gray-900">
-                  <ul className="space-y-2 mt-2">
-                    <li>• フロントエンド開発スペシャリスト派遣</li>
-                    <li>• Webシステム開発</li>
-                    <li>• AIソリューション開発</li>
-                    <li>• リード獲得自動化支援</li>
-                  </ul>
-                </dd>
-              </div>
+              {company.employees && (
+                <div className="border-b border-gray-200 pb-6">
+                  <dt className="text-sm font-semibold text-gray-600 mb-2">従業員数</dt>
+                  <dd className="text-lg text-gray-900">{company.employees}</dd>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </section>
 
       {/* Mission & Vision */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                Mission
-              </h2>
-              <p className="text-lg text-gray-700 leading-relaxed">
-                テクノロジーで、人とサービスの可能性を引き上げる。
-                <br /><br />
-                私たちは最新のフロントエンド技術とAIを駆使し、
-                お客様のビジネスを次のステージへと導きます。
-              </p>
-            </div>
+      {(company.mission || company.vision) && (
+        <section className="py-20 bg-gray-50 dark:bg-gray-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              {company.mission && (
+                <div>
+                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+                    Mission
+                  </h2>
+                  <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                    {company.mission}
+                  </p>
+                </div>
+              )}
 
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                Vision
-              </h2>
-              <p className="text-lg text-gray-700 leading-relaxed">
-                技術パートナーとして、お客様と共に成長し続ける。
-                <br /><br />
-                単なる開発会社ではなく、お客様のビジネスパートナーとして、
-                長期的な成功に貢献します。
-              </p>
+              {company.vision && (
+                <div>
+                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+                    Vision
+                  </h2>
+                  <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                    {company.vision}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Values */}
       <section className="py-20 bg-white">

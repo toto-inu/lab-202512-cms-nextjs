@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getCasesByTag, getAllTags } from '@/data/cases';
+import { getCasesByTag, getAllTags } from '@/lib/api/cases';
 
 export async function generateStaticParams() {
-  const tags = getAllTags();
+  const tags = await getAllTags();
   return tags.map((tag) => ({
     tag: encodeURIComponent(tag),
   }));
@@ -12,7 +12,7 @@ export async function generateStaticParams() {
 export default async function TagPage({ params }: { params: Promise<{ tag: string }> }) {
   const { tag: encodedTag } = await params;
   const tag = decodeURIComponent(encodedTag);
-  const cases = getCasesByTag(tag);
+  const cases = await getCasesByTag(tag);
 
   if (cases.length === 0) {
     notFound();

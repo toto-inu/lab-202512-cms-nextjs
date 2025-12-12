@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { getTagWithCount } from '@/data/cases';
+import { getTagWithCount } from '@/lib/api/cases';
 
-export default function TagsPage() {
-  const tags = getTagWithCount();
+export default async function TagsPage() {
+  const tags = await getTagWithCount();
 
   return (
     <div>

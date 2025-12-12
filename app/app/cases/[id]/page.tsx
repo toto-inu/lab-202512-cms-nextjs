@@ -2,10 +2,10 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { getCaseById, getAllCases, getRelatedCases } from '@/data/cases';
+import { getCaseById, getAllCases, getRelatedCases } from '@/lib/api/cases';
 
 export async function generateStaticParams() {
-  const cases = getAllCases();
+  const cases = await getAllCases();
   return cases.map((caseItem) => ({
     id: caseItem.id,
   }));
@@ -13,13 +13,10 @@ export async function generateStaticParams() {
 
 export default async function CaseDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const caseItem = getCaseById(id);
 
-  if (!caseItem) {
-    notFound();
-  }
-
-  const relatedCases = getRelatedCases(id, 2);
+  try {
+    const caseItem = await getCaseById(id);
+    const relatedCases = await getRelatedCases(id, 2);
 
   return (
     <div>
@@ -46,16 +43,18 @@ export default async function CaseDetail({ params }: { params: Promise<{ id: str
             {caseItem.title}
           </h1>
 
-          <div className="flex flex-wrap gap-3 mb-6">
-            {caseItem.tags.map((tag) => (
-              <span
-                key={tag}
-                className="px-3 py-1 bg-white/10 text-white text-sm rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+          {caseItem.tags && (
+            <div className="flex flex-wrap gap-3 mb-6">
+              {caseItem.tags.split(',').map((tag) => (
+                <span
+                  key={tag.trim()}
+                  className="px-3 py-1 bg-white/10 text-white text-sm rounded-full"
+                >
+                  {tag.trim()}
+                </span>
+              ))}
+            </div>
+          )}
 
           <div className="flex items-center gap-6 text-sm text-gray-300">
             <div>
@@ -265,16 +264,18 @@ export default async function CaseDetail({ params }: { params: Promise<{ id: str
                     <p className="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">
                       {relatedCase.description}
                     </p>
-                    <div className="flex flex-wrap gap-2">
-                      {relatedCase.tags.slice(0, 2).map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-2 py-1 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-200 text-xs rounded-full"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+                    {relatedCase.tags && (
+                      <div className="flex flex-wrap gap-2">
+                        {relatedCase.tags.split(',').slice(0, 2).map((tag) => (
+                          <span
+                            key={tag.trim()}
+                            className="px-2 py-1 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-200 text-xs rounded-full"
+                          >
+                            {tag.trim()}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </Link>
               ))}
@@ -304,4 +305,7 @@ export default async function CaseDetail({ params }: { params: Promise<{ id: str
       </section>
     </div>
   );
+  } catch (error) {
+    notFound();
+  }
 }

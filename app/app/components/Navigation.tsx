@@ -36,6 +36,12 @@ export default function Navigation() {
               事例
             </Link>
             <Link
+              href="/blog"
+              className="text-gray-700 hover:text-gray-900 transition-colors font-medium"
+            >
+              ブログ
+            </Link>
+            <Link
               href="/contact"
               className="px-6 py-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition-colors font-medium"
             >
@@ -90,6 +96,13 @@ export default function Navigation() {
               onClick={() => setIsMenuOpen(false)}
             >
               事例
+            </Link>
+            <Link
+              href="/blog"
+              className="block text-gray-700 hover:text-gray-900 transition-colors font-medium"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              ブログ
             </Link>
             <Link
               href="/contact"
