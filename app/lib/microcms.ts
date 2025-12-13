@@ -1,4 +1,5 @@
-import { createClient } from 'microcms-js-sdk';
+import { createClient } from 'microcms-ts-sdk';
+import type { Endpoints } from '@/types/microcms';
 
 if (!process.env.MICROCMS_SERVICE_DOMAIN) {
   throw new Error('MICROCMS_SERVICE_DOMAIN is required');
@@ -8,7 +9,7 @@ if (!process.env.MICROCMS_API_KEY) {
   throw new Error('MICROCMS_API_KEY is required');
 }
 
-export const client = createClient({
+export const client = createClient<Endpoints>({
   serviceDomain: process.env.MICROCMS_SERVICE_DOMAIN,
   apiKey: process.env.MICROCMS_API_KEY,
 });

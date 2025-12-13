@@ -1,15 +1,10 @@
 import { client } from '@/lib/microcms';
-import type {
-  CaseResponse,
-  CaseListResponse,
-  CaseQueries
-} from '@/types/microcms';
 
-const ENDPOINT = 'cases';
+const ENDPOINT = 'cases' as const;
 
 // すべての事例を取得
-export async function getAllCases(queries?: CaseQueries): Promise<CaseResponse[]> {
-  const data = await client.get<CaseListResponse>({
+export async function getAllCases(queries?: { limit?: number; offset?: number; filters?: string }) {
+  const data = await client.getList({
     endpoint: ENDPOINT,
     queries: {
       limit: 100,
@@ -20,8 +15,8 @@ export async function getAllCases(queries?: CaseQueries): Promise<CaseResponse[]
 }
 
 // IDで事例を取得
-export async function getCaseById(id: string): Promise<CaseResponse> {
-  const data = await client.get<CaseResponse>({
+export async function getCaseById(id: string) {
+  const data = await client.getListDetail({
     endpoint: ENDPOINT,
     contentId: id,
   });
@@ -29,8 +24,8 @@ export async function getCaseById(id: string): Promise<CaseResponse> {
 }
 
 // タグで事例を取得
-export async function getCasesByTag(tag: string): Promise<CaseResponse[]> {
-  const data = await client.get<CaseListResponse>({
+export async function getCasesByTag(tag: string) {
+  const data = await client.getList({
     endpoint: ENDPOINT,
     queries: {
       filters: `tags[contains]${tag}`,
@@ -75,7 +70,7 @@ export async function getTagWithCount(): Promise<{ tag: string; count: number }[
 export async function getRelatedCases(
   currentCaseId: string,
   limit: number = 2
-): Promise<CaseResponse[]> {
+) {
   const currentCase = await getCaseById(currentCaseId);
   const allCases = await getAllCases();
 

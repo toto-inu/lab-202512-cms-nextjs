@@ -1,15 +1,10 @@
 import { client } from '@/lib/microcms';
-import type {
-  BlogPostResponse,
-  BlogPostListResponse,
-  BlogQueries
-} from '@/types/microcms';
 
-const ENDPOINT = 'blog';
+const ENDPOINT = 'blog' as const;
 
 // すべてのブログ記事を取得
-export async function getAllBlogPosts(queries?: BlogQueries): Promise<BlogPostResponse[]> {
-  const data = await client.get<BlogPostListResponse>({
+export async function getAllBlogPosts(queries?: { limit?: number; offset?: number; filters?: string }) {
+  const data = await client.getList({
     endpoint: ENDPOINT,
     queries: {
       limit: 100,
@@ -21,8 +16,8 @@ export async function getAllBlogPosts(queries?: BlogQueries): Promise<BlogPostRe
 }
 
 // IDでブログ記事を取得
-export async function getBlogPostById(id: string): Promise<BlogPostResponse> {
-  const data = await client.get<BlogPostResponse>({
+export async function getBlogPostById(id: string) {
+  const data = await client.getListDetail({
     endpoint: ENDPOINT,
     contentId: id,
   });
@@ -30,8 +25,8 @@ export async function getBlogPostById(id: string): Promise<BlogPostResponse> {
 }
 
 // タグでブログ記事を取得
-export async function getBlogPostsByTag(tag: string): Promise<BlogPostResponse[]> {
-  const data = await client.get<BlogPostListResponse>({
+export async function getBlogPostsByTag(tag: string) {
+  const data = await client.getList({
     endpoint: ENDPOINT,
     queries: {
       filters: `tags[contains]${tag}`,
@@ -55,8 +50,8 @@ export async function getAllBlogTags(): Promise<string[]> {
 }
 
 // 最新のブログ記事を取得
-export async function getRecentBlogPosts(limit: number = 5): Promise<BlogPostResponse[]> {
-  const data = await client.get<BlogPostListResponse>({
+export async function getRecentBlogPosts(limit: number = 5) {
+  const data = await client.getList({
     endpoint: ENDPOINT,
     queries: {
       limit,

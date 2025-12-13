@@ -60,7 +60,7 @@ export default async function BlogPostDetail({ params }: { params: Promise<{ id:
               )}
               <div>
                 <span className="font-semibold">公開日: </span>
-                {new Date(post.publishedAt).toLocaleDateString('ja-JP', {
+                {new Date(post.publishedAt || post.createdAt).toLocaleDateString('ja-JP', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric',
@@ -246,7 +246,7 @@ export default async function BlogPostDetail({ params }: { params: Promise<{ id:
                     </div>
                     <div className="p-5">
                       <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                        {new Date(relatedPost.publishedAt).toLocaleDateString('ja-JP', {
+                        {new Date(relatedPost.publishedAt || relatedPost.createdAt).toLocaleDateString('ja-JP', {
                           year: 'numeric',
                           month: 'long',
                           day: 'numeric',

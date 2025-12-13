@@ -43,7 +43,7 @@ export default async function Blog() {
                 </div>
                 <div className="p-6">
                   <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                    {new Date(post.publishedAt).toLocaleDateString('ja-JP', {
+                    {new Date(post.publishedAt || post.createdAt).toLocaleDateString('ja-JP', {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',

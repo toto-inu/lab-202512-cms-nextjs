@@ -71,20 +71,22 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
                   <p className="text-gray-600 mb-4 line-clamp-2">
                     {caseItem.description}
                   </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {caseItem.tags.slice(0, 3).map((caseTag) => (
-                      <span
-                        key={caseTag}
-                        className={`px-3 py-1 text-xs rounded-full ${
-                          caseTag === tag
-                            ? 'bg-gray-900 text-white'
-                            : 'bg-gray-100 text-gray-700'
-                        }`}
-                      >
-                        {caseTag}
-                      </span>
-                    ))}
-                  </div>
+                  {caseItem.tags && (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {caseItem.tags.split(',').slice(0, 3).map((caseTag) => (
+                        <span
+                          key={caseTag.trim()}
+                          className={`px-3 py-1 text-xs rounded-full ${
+                            caseTag.trim() === tag
+                              ? 'bg-gray-900 text-white'
+                              : 'bg-gray-100 text-gray-700'
+                          }`}
+                        >
+                          {caseTag.trim()}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                   <div className="flex items-center gap-2 text-sm text-gray-900 font-semibold">
                     詳しく見る
                     <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

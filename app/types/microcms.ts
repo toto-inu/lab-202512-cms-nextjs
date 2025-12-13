@@ -1,49 +1,34 @@
-import type { MicroCMSQueries, MicroCMSImage, MicroCMSDate } from 'microcms-js-sdk';
+// microCMS API型定義
+import type { MicroCMSImage } from 'microcms-js-sdk';
 
-// 事例(Case)の型定義
-export interface Case {
-  id: string;
+// ====================================
+// コンテンツ型定義
+// ====================================
+
+// ブログ記事
+export interface Blog {
+  title: string;
+  description: string;
+  content: string;
+  thumbnail?: MicroCMSImage;
+  tags?: string;
+  author?: string;
+  publishedAt?: string;
+}
+
+// 事例
+export interface Cases {
   title: string;
   description: string;
   client: string;
   category: string;
-  tags: string;
-  publishedAt: string;
+  tags?: string;
   thumbnail?: MicroCMSImage;
   content: string;
-}
-
-export interface CaseResponse extends Case, MicroCMSDate {}
-
-export interface CaseListResponse {
-  contents: CaseResponse[];
-  totalCount: number;
-  offset: number;
-  limit: number;
-}
-
-// ブログ記事の型定義
-export interface BlogPost {
-  id: string;
-  title: string;
-  description: string;
-  content: string;
   publishedAt: string;
-  thumbnail?: MicroCMSImage;
-  tags: string;
-  author?: string;
 }
 
-export interface BlogPostResponse extends BlogPost, MicroCMSDate {}
-
-export interface BlogPostListResponse {
-  contents: BlogPostResponse[];
-  totalCount: number;
-  offset: number;
-  limit: number;
-}
-
-// 会社情報の型定義
+// 会社情報
 export interface Company {
   name: string;
   description: string;
@@ -56,8 +41,16 @@ export interface Company {
   capital?: string;
 }
 
-export interface CompanyResponse extends Company, MicroCMSDate {}
+// ====================================
+// microcms-ts-sdk用のEndpoints型
+// ====================================
 
-// microCMSのクエリパラメータ型
-export type CaseQueries = MicroCMSQueries;
-export type BlogQueries = MicroCMSQueries;
+export interface Endpoints {
+  list: {
+    blog: Blog;
+    cases: Cases;
+  };
+  object: {
+    company: Company;
+  };
+}
