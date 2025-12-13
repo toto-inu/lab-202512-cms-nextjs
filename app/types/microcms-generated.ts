@@ -1,5 +1,5 @@
 // このファイルは自動生成されています。手動で編集しないでください。
-// Generated at: 2025-12-13T13:50:41.427Z
+// Generated at: 2025-12-13T14:15:44.058Z
 
 import type { MicroCMSImage, MicroCMSDate } from 'microcms-js-sdk';
 
@@ -11,6 +11,7 @@ export interface Blog {
   thumbnail?: MicroCMSImage;
   tags?: string;
   author?: string;
+  publishedAt?: string;
 }
 
 export interface BlogResponse extends Blog, MicroCMSDate {}
