@@ -1,0 +1,20 @@
+{
+  "id": "company",
+  "name": "会社情報",
+  "endpoint": "company",
+  "kind": "object",
+  "fields": [
+    {
+      "fieldId": "name",
+      "name": "会社名",
+      "kind": "text",
+      "required": true
+    },
+    {
+      "fieldId": "description",
+      "name": "説明",
+      "kind": "textArea",
+      "required": true
+    }
+  ]
+}

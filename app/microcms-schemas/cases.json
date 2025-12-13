@@ -1,0 +1,51 @@
+{
+  "id": "cases",
+  "name": "事例",
+  "endpoint": "cases",
+  "kind": "list",
+  "fields": [
+    {
+      "fieldId": "title",
+      "name": "タイトル",
+      "kind": "text",
+      "required": true
+    },
+    {
+      "fieldId": "description",
+      "name": "説明",
+      "kind": "text",
+      "required": true
+    },
+    {
+      "fieldId": "client",
+      "name": "クライアント",
+      "kind": "text",
+      "required": true
+    },
+    {
+      "fieldId": "category",
+      "name": "カテゴリ",
+      "kind": "text",
+      "required": true
+    },
+    {
+      "fieldId": "tags",
+      "name": "タグ",
+      "kind": "text",
+      "required": false,
+      "isUnique": false
+    },
+    {
+      "fieldId": "thumbnail",
+      "name": "サムネイル",
+      "kind": "media",
+      "required": false
+    },
+    {
+      "fieldId": "content",
+      "name": "本文",
+      "kind": "textArea",
+      "required": true
+    }
+  ]
+}

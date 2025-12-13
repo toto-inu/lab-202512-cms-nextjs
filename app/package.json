@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "fetch:schemas": "tsx scripts/fetch-schemas.ts",
+    "generate:types": "tsx scripts/generate-types.ts",
+    "sync:types": "bun run fetch:schemas && bun run generate:types"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
@@ -23,9 +26,11 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "16.0.7",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }

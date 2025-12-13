@@ -1,0 +1,45 @@
+{
+  "id": "blog",
+  "name": "ブログ",
+  "endpoint": "blog",
+  "kind": "list",
+  "fields": [
+    {
+      "fieldId": "title",
+      "name": "タイトル",
+      "kind": "text",
+      "required": true
+    },
+    {
+      "fieldId": "description",
+      "name": "説明",
+      "kind": "text",
+      "required": true
+    },
+    {
+      "fieldId": "content",
+      "name": "本文",
+      "kind": "textArea",
+      "required": true
+    },
+    {
+      "fieldId": "thumbnail",
+      "name": "サムネイル",
+      "kind": "media",
+      "required": false
+    },
+    {
+      "fieldId": "tags",
+      "name": "タグ",
+      "kind": "text",
+      "required": false,
+      "isUnique": false
+    },
+    {
+      "fieldId": "author",
+      "name": "著者",
+      "kind": "text",
+      "required": false
+    }
+  ]
+}
