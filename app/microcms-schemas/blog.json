@@ -40,6 +40,13 @@
       "name": "著者",
       "kind": "text",
       "required": false
+    },
+    {
+      "fieldId": "publishedAt",
+      "name": "公開日",
+      "kind": "date",
+      "required": false,
+      "dateFormat": false
     }
   ]
 }
